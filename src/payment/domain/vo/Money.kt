@@ -5,9 +5,6 @@ data class Money(
         require(value >= 0) {
             "금액은 0 이상이여야 합니다"
         }
-        require(value % 1000 == 0) {
-            "금액은 1000원 단위여야 합니다"
-        }
     }
 
     operator fun plus(other: Money): Money = Money(this.value + other.value)

@@ -6,15 +6,22 @@ enum class Rank(
     val matchCount: Int,
     val prize: Money,
 ) {
-    FIRST(6, Money(2_000_000_000)),
-    SECOND(5, Money(30_000_000)),
-    THIRD(5, Money(1_500_000)),
-    FOURTH(4, Money(50_000)),
-    FIFTH(3, Money(5_000)),
-    MISS(0, Money(0)), // 이건 3개 미만인 수들에 대해서 어차피 matchCount는 당첨금에 영향 X 므로 0으로 처리
+    FIRST(6, Money(PRIZE_FIRST)),
+    SECOND(5, Money(PRIZE_SECOND)),
+    THIRD(5, Money(PRIZE_THIRD)),
+    FOURTH(4, Money(PRIZE_FOURTH)),
+    FIFTH(3, Money(PRIZE_FIFTH)),
+    MISS(0, Money(PRIZE_MISS)), // 이건 3개 미만인 수들에 대해서 어차피 matchCount는 당첨금에 영향 X 므로 0으로 처리
     ;
 
     companion object {
+        const val PRIZE_FIRST = 2_100_000_000
+        const val PRIZE_SECOND = 60_000_000
+        const val PRIZE_THIRD = 1_500_000
+        const val PRIZE_FOURTH = 50_000
+        const val PRIZE_FIFTH = 5_000
+        const val PRIZE_MISS = 0
+
         fun valueOf(
             count: Int,
             bonusMatch: Boolean,
