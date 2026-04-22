@@ -1,6 +1,6 @@
 package lotto.infrastructure.repository
 
-import LottoRound
+import lotto.domain.entity.LottoRound
 
 // data access layer
 interface LottoRepository {

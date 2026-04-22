@@ -1,3 +1,8 @@
+package lotto.infrastructure.strategy
+
+import lotto.domain.vo.LottoGenerationStrategy
+import lotto.domain.vo.LottoNumber
+
 class RandomLottoGenerationStrategy : LottoGenerationStrategy {
     override fun generate(
         count: Int,

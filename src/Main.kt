@@ -1,8 +1,8 @@
-import lotto.infrastructure.repository.CsvLottoRepository
-import payment.infrastructure.repository.FileWalletRepository
-import lotto.infrastructure.strategy.RandomLottoGenerationStrategy
 import lotto.application.LottoService
+import lotto.infrastructure.repository.CsvLottoRepository
+import lotto.infrastructure.strategy.RandomLottoGenerationStrategy
 import lotto.presentation.LottoController
+import payment.infrastructure.repository.FileWalletRepository
 
 fun main() {
     // entry point에서 필요한 구성요소들 생성 및 주입

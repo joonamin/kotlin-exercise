@@ -1,3 +1,5 @@
+package payment.domain.vo
+
 data class Money(
     val value: Int,
 ) : Comparable<Money> {

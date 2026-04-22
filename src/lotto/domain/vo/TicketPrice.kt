@@ -1,6 +1,6 @@
 package lotto.domain.vo
 
-import Money
+import payment.domain.vo.Money
 
 data class TicketPrice(
     val unitPrice: Money,

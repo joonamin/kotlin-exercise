@@ -1,3 +1,5 @@
+package lotto.domain.vo
+
 import lotto.domain.vo.enums.Rank
 
 data class WinningNumbers(

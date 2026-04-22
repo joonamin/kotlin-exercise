@@ -1,11 +1,11 @@
 package lotto.infrastructure.repository
 
-import LottoNumber
-import LottoNumbers
-import LottoResult
-import LottoRound
-import TicketResult
-import WinningNumbers
+import lotto.domain.entity.LottoRound
+import lotto.domain.entity.TicketResult
+import lotto.domain.vo.LottoNumber
+import lotto.domain.vo.LottoNumbers
+import lotto.domain.vo.LottoResult
+import lotto.domain.vo.WinningNumbers
 import lotto.domain.vo.enums.Rank
 import lotto.domain.vo.enums.RoundStatus
 import java.io.File
@@ -21,7 +21,7 @@ class CsvLottoRepository(
         val file = File(dir, "lottos_${round.roundNumber}.csv")
         val sb = StringBuilder()
 
-        val winningPart =
+        val winningPart: String =
             round.winningNumbers?.let {
                 "${it.lottoNumbers.toCsvString()},${it.bonusNumber.number}"
             } ?: ","
