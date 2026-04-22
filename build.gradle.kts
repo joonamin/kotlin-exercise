@@ -30,6 +30,12 @@ ktlint {
     }
 }
 
+// gradle run으로 실행시 표준입력을 사용하도록 설정
+// 기본적으로 gradle은 표준입력을 애플리케이션 프로세스에 전달하지 않음
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}
+
 tasks.named("check") {
     dependsOn("ktlintCheck")
 }
