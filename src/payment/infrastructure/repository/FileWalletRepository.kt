@@ -1,7 +1,7 @@
 package payment.infrastructure.repository
 
-import Money
 import payment.domain.entity.Wallet
+import payment.domain.vo.Money
 import java.io.File
 
 class FileWalletRepository(

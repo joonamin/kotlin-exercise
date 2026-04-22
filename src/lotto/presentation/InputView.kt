@@ -1,3 +1,9 @@
+package lotto.presentation
+
+import lotto.domain.vo.LottoNumber
+import lotto.domain.vo.LottoNumbers
+import payment.domain.vo.Money
+
 /**
  * 사용자 입력을 처리하는 뷰
  * - 파싱과 기본 형식 검증만 수행

@@ -1,3 +1,8 @@
+package lotto.domain.entity
+
+import lotto.domain.vo.LottoNumbers
+import lotto.domain.vo.LottoResult
+import lotto.domain.vo.WinningNumbers
 import lotto.domain.vo.enums.Rank
 import lotto.domain.vo.enums.RoundStatus
 

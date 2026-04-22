@@ -1,17 +1,15 @@
 package lotto.presentation
 
-import InputView
-import OutputView
 import lotto.application.LottoService
+import lotto.domain.vo.LottoGenerationStrategy
 import lotto.domain.vo.LottoNumber
 import lotto.domain.vo.LottoNumbers
 import lotto.domain.vo.TicketPrice
 import lotto.domain.vo.WinningNumbers
 import lotto.domain.vo.enums.RoundStatus
-import lotto.infrastructure.strategy.LottoGenerationStrategy
 import payment.domain.entity.Wallet
-import payment.infrastructure.repository.WalletRepository
 import payment.domain.vo.Money
+import payment.infrastructure.repository.WalletRepository
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -22,7 +20,7 @@ class LottoController(
     private val service: LottoService,
     private val walletRepository: WalletRepository,
     private val strategy: LottoGenerationStrategy,
-    private val wallet: Wallet
+    private val wallet: Wallet,
 ) {
     private val roundFile = File("data/current_round.txt")
     private var currentRoundNumber: Int = loadCurrentRound()
@@ -67,9 +65,13 @@ class LottoController(
 
     private fun draw() {
         val winningNumbers = generateWinningNumbers()
-        
+
         println("\n[${currentRoundNumber}회차 발표]")
-        val numbersString = winningNumbers.lottoNumbers.numbers.map { it.number }.sorted().joinToString(", ", "[", "]")
+        val numbersString =
+            winningNumbers.lottoNumbers.numbers
+                .map { it.number }
+                .sorted()
+                .joinToString(", ", "[", "]")
         println("당첨 번호: $numbersString + 보너스: ${winningNumbers.bonusNumber.number}")
 
         try {
@@ -103,7 +105,7 @@ class LottoController(
         OutputView.printYield(result, totalCost)
 
         depositPrize(result.results.sumOf { it.rank.prize.value })
-        
+
         currentRoundNumber++
         saveCurrentRound(currentRoundNumber)
         println("\n[안내] 추첨이 완료되었습니다. 다음 회차(${currentRoundNumber}회차) 구매를 시작합니다.")
@@ -113,7 +115,9 @@ class LottoController(
         if (totalPrize > 0) {
             wallet.receivePrize(Money.won(totalPrize))
             walletRepository.save(wallet)
-            println("\n[안내] 당첨금 ${"%,d".format(totalPrize)}원이 지갑에 입금되었습니다. (현재 잔액: ${"%,d".format(wallet.balance.value)}원)")
+            println(
+                "\n[안내] 당첨금 ${"%,d".format(totalPrize)}원이 지갑에 입금되었습니다. (현재 잔액: ${"%,d".format(wallet.balance.value)}원)",
+            )
         }
     }
 

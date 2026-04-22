@@ -1,3 +1,5 @@
+package lotto.domain.vo
+
 data class LottoNumber(
     val number: Int,
 ) {

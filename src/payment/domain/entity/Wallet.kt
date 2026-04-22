@@ -1,6 +1,6 @@
 package payment.domain.entity
 
-import Money
+import payment.domain.vo.Money
 
 class Wallet(
     private var _balance: Money = Money.ZERO,

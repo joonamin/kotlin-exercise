@@ -1,3 +1,10 @@
+package lotto.application
+
+import lotto.domain.entity.LottoRound
+import lotto.domain.vo.LottoGenerationStrategy
+import lotto.domain.vo.LottoNumbers
+import lotto.domain.vo.LottoResult
+import lotto.domain.vo.WinningNumbers
 import lotto.domain.vo.enums.RoundStatus
 import lotto.infrastructure.repository.LottoRepository
 
