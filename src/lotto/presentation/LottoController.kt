@@ -1,6 +1,7 @@
 package lotto.presentation
 
 import lotto.application.LottoService
+import lotto.application.dto.PurchaseLottoCommand
 import lotto.domain.vo.LottoGenerationStrategy
 import lotto.domain.vo.LottoNumber
 import lotto.domain.vo.LottoNumbers
@@ -56,7 +57,14 @@ class LottoController(
             return
         }
 
-        val round = service.purchaseLotto(currentRoundNumber, ticketCount, manualNumbers)
+        val purchaseLottoCommand =
+            PurchaseLottoCommand.of(
+                roundNumber = currentRoundNumber,
+                ticketCount = ticketCount,
+                manualNumbersList = manualNumbers,
+            )
+
+        val round = service.purchaseLotto(purchaseLottoCommand)
         walletRepository.save(wallet)
 
         val autoCount = ticketCount - manualCount

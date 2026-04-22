@@ -1,5 +1,6 @@
 package lotto.application
 
+import lotto.application.dto.PurchaseLottoCommand
 import lotto.domain.entity.LottoRound
 import lotto.domain.vo.LottoGenerationStrategy
 import lotto.domain.vo.LottoNumbers
@@ -13,20 +14,11 @@ class LottoService(
     private val repository: LottoRepository,
     private val strategy: LottoGenerationStrategy,
 ) {
-    fun purchaseLotto(
-        roundNumber: Int,
-        ticketCount: Int,
-        manualNumbersList: List<LottoNumbers>,
-    ): LottoRound {
-        require(ticketCount > 0) {
-            "구매 수량은 1개 이상이어야 합니다."
-        }
-        require(manualNumbersList.size <= ticketCount) {
-            "수동 구매 개수는 총 구매 개수를 초과할 수 없습니다."
-        }
+    fun purchaseLotto(command: PurchaseLottoCommand): LottoRound {
+        val (roundNumber, ticketCount) = command
+        val manualNumbersList = command.manualNumbersList
 
         // 금액의 검증은 payment context에게 위임하자!
-
         val round =
             repository.findByRoundNumber(roundNumber)
                 ?: LottoRound(roundNumber, mutableListOf(), RoundStatus.OPEN)
