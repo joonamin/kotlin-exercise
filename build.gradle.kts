@@ -4,6 +4,9 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
+kotlin {
+    jvmToolchain(21)
+}
 application {
     mainClass.set("MainKt")
 }
