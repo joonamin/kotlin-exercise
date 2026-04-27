@@ -12,9 +12,10 @@ private const val PRIZE_MISS = 0
 enum class Rank(
     val matchCount: Int,
     val prize: Money,
+    val requiresBonus: Boolean = false,
 ) {
     FIRST(6, Money.won(PRIZE_FIRST)),
-    SECOND(5, Money.won(PRIZE_SECOND)),
+    SECOND(5, Money.won(PRIZE_SECOND), true),
     THIRD(5, Money.won(PRIZE_THIRD)),
     FOURTH(4, Money.won(PRIZE_FOURTH)),
     FIFTH(3, Money.won(PRIZE_FIFTH)),
@@ -22,16 +23,17 @@ enum class Rank(
     ;
 
     companion object {
+        // values()의 대응..
+        // kotlin에서는 entries 라는 values 래퍼가 존재
+        // values()는 항상 새로운 배열을 생성하여 복사하여 제공
+        // entries는 내부적으로 캐싱된 리스트를 반환
         fun valueOf(
             count: Int,
             bonusMatch: Boolean,
         ): Rank =
-            when (count) {
-                6 -> FIRST
-                5 -> if (bonusMatch) SECOND else THIRD
-                4 -> FOURTH
-                3 -> FIFTH
-                else -> MISS
+            entries.find {
+                it.matchCount == count && it.requiresBonus == (count == 5 && bonusMatch)
             }
+                ?: MISS
     }
 }
