@@ -9,12 +9,6 @@ enum class RoundStatus(
     ;
 
     companion object {
-        fun valueOf(status: String): RoundStatus =
-            when (status) {
-                "OPEN" -> OPEN
-                "IN PROGRESS" -> IN_PROGRESS
-                "FINISHED" -> FINISHED
-                else -> OPEN
-            }
+        fun valueOf(status: String): RoundStatus = entries.find { it.status == status } ?: OPEN
     }
 }
