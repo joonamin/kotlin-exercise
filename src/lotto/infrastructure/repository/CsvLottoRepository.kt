@@ -22,23 +22,22 @@ class CsvLottoRepository(
         val winningPart: String =
             round.winningNumbers?.let {
                 "${it.lottoNumbers.toCsvString()},${it.bonusNumber.number}"
-            } ?: ","
+            }
+                ?: ","
 
         val csvContent =
             buildString {
                 appendLine("${round.roundNumber},${round.status.name},$winningPart")
                 appendLine("numbers,rank")
 
-                val result = round.result
-                if (result != null) {
-                    result.results.forEach { detail ->
+                val lottoResult = round.result
+                if (lottoResult != null) {
+                    lottoResult.results.forEach { detail ->
                         appendLine("${detail.ticketNumbers.toCsvString()},${detail.rank}")
                     }
                 } else {
                     // 미추첨시 번호만 저장한다
-                    round.pickedNumbers.forEach { numbers ->
-                        appendLine("${numbers.toCsvString()},")
-                    }
+                    round.pickedNumbers.forEach { numbers -> appendLine("${numbers.toCsvString()},") }
                 }
             }
 
@@ -98,7 +97,12 @@ class CsvLottoRepository(
 
             restoreState(
                 winningNumbers = winningNumbers,
-                result = if (ticketResults.isNotEmpty()) LottoResult(ticketResults) else null,
+                result =
+                    if (ticketResults.isNotEmpty()) {
+                        LottoResult(ticketResults)
+                    } else {
+                        null
+                    },
             )
         }
     }

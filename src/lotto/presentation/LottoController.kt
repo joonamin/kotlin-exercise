@@ -68,7 +68,13 @@ class LottoController(
         walletRepository.save(wallet)
 
         val autoCount = ticketCount - manualCount
-        OutputView.printPurchaseResult(round.pickedNumbers, manualCount, autoCount, totalCost, wallet.balance)
+        OutputView.printPurchaseResult(
+            round.pickedNumbers,
+            manualCount,
+            autoCount,
+            totalCost,
+            wallet.balance,
+        )
     }
 
     private fun draw() {
@@ -76,7 +82,9 @@ class LottoController(
 
         println("\n[${currentRoundNumber}회차 발표]")
         val numbersString =
-            winningNumbers.lottoNumbers.numbers
+            winningNumbers
+                .lottoNumbers
+                .numbers
                 .map { it.number }
                 .sorted()
                 .joinToString(", ", "[", "]")
@@ -124,7 +132,9 @@ class LottoController(
             wallet.receivePrize(Money.won(totalPrize))
             walletRepository.save(wallet)
             println(
-                "\n[안내] 당첨금 ${"%,d".format(totalPrize)}원이 지갑에 입금되었습니다. (현재 잔액: ${"%,d".format(wallet.balance.value)}원)",
+                "\n[안내] 당첨금 ${"%,d".format(
+                    totalPrize,
+                )}원이 지갑에 입금되었습니다. (현재 잔액: ${"%,d".format(wallet.balance.value)}원)",
             )
         }
     }
@@ -147,7 +157,9 @@ class LottoController(
         if (roundData == null) {
             OutputView.printError("해당 회차(${searchRound}회차)의 데이터가 없습니다.")
         } else if (roundData.status == RoundStatus.OPEN) {
-            OutputView.printError("해당 회차(${searchRound}회차)는 아직 추첨되지 않았습니다. '2. 로또 추첨' 메뉴를 통해 추첨을 먼저 수행해 주세요.")
+            OutputView.printError(
+                "해당 회차(${searchRound}회차)는 아직 추첨되지 않았습니다. '2. 로또 추첨' 메뉴를 통해 추첨을 먼저 수행해 주세요.",
+            )
         } else if (roundData.result != null) {
             println("\n[${searchRound}회차 당첨 조회 결과]")
             OutputView.printWinningStatistics(roundData.result!!)
