@@ -5,9 +5,7 @@ import lotto.domain.vo.LottoResult
 import lotto.domain.vo.enums.Rank
 import payment.domain.vo.Money
 
-/**
- * 결과를 포맷팅하여 출력하는 뷰
- */
+/** 결과를 포맷팅하여 출력하는 뷰 */
 object OutputView {
     fun printPurchaseResult(
         tickets: List<LottoNumbers>,
