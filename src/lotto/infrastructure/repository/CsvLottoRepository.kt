@@ -19,28 +19,30 @@ class CsvLottoRepository(
 
     override fun save(round: LottoRound) {
         val file = File(dir, "lottos_${round.roundNumber}.csv")
-        val sb = StringBuilder()
-
         val winningPart: String =
             round.winningNumbers?.let {
                 "${it.lottoNumbers.toCsvString()},${it.bonusNumber.number}"
             } ?: ","
-        sb.appendLine("${round.roundNumber},${round.status.name},$winningPart")
 
-        sb.appendLine("numbers,rank")
+        val csvContent =
+            buildString {
+                appendLine("${round.roundNumber},${round.status.name},$winningPart")
+                appendLine("numbers,rank")
 
-        if (round.result != null) {
-            round.result!!.results.forEach { detail ->
-                sb.appendLine("${detail.ticketNumbers.toCsvString()},${detail.rank}")
+                val result = round.result
+                if (result != null) {
+                    result.results.forEach { detail ->
+                        appendLine("${detail.ticketNumbers.toCsvString()},${detail.rank}")
+                    }
+                } else {
+                    // 미추첨시 번호만 저장한다
+                    round.pickedNumbers.forEach { numbers ->
+                        appendLine("${numbers.toCsvString()},")
+                    }
+                }
             }
-        } else {
-            // 미추첨시 번호만 저장한다
-            round.pickedNumbers.forEach { numbers ->
-                sb.appendLine("${numbers.toCsvString()},")
-            }
-        }
 
-        file.writeText(sb.toString().trimEnd())
+        file.writeText(csvContent.trimEnd())
     }
 
     override fun findByRoundNumber(roundNumber: Int): LottoRound? {
@@ -51,7 +53,7 @@ class CsvLottoRepository(
 
     private fun deserialize(file: File): LottoRound {
         val lines = file.readLines().filter { it.isNotBlank() }
-        if (lines.isEmpty()) throw IllegalStateException("파일이 비어있음")
+        check(lines.isNotEmpty()) { "파일이 비어있습니다!" }
 
         // 1행 파싱: roundNumber,status,winningNumbers,bonusNumber
         val headerParts = lines[0].split(",")
