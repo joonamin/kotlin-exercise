@@ -1,10 +1,12 @@
 package lotto.domain.vo
 
 data class LottoNumbers(
-    val numbers: List<LottoNumber>,
+    private val _numbers: List<LottoNumber>,
 ) {
+    val numbers: List<LottoNumber> = _numbers.sortedBy { it.number }
+
     init {
-        require(numbers.distinct().size == TOTAL_COUNT) { "로또 번호들은 ${TOTAL_COUNT} 개여야 합니다" }
+        require(numbers.distinct().size == TOTAL_COUNT) { "로또 번호들은 중복 없이 ${TOTAL_COUNT} 개여야 합니다" }
     }
 
     fun toCsvString(): String = this.numbers.joinToString(":")

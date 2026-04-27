@@ -14,7 +14,6 @@ class RandomLottoGenerationStrategy : LottoGenerationStrategy {
                 .filter { it !in excludeNumbers }
                 .shuffled()
                 .take(count)
-                .sorted()
                 .map { LottoNumber(it) }
 
         return candidates
