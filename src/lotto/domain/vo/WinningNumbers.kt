@@ -20,4 +20,12 @@ data class WinningNumbers(
     }
 
     fun toCsv(): String = "${lottoNumbers.toCsvString()},$bonusNumber"
+
+    companion object {
+        fun draw(strategy: LottoGenerationStrategy): WinningNumbers {
+            val lottoNumbers = LottoNumbers.auto(strategy)
+            val bonus = strategy.generate(count = 1, exclude = lottoNumbers.numbers).first()
+            return WinningNumbers(lottoNumbers, bonus)
+        }
+    }
 }

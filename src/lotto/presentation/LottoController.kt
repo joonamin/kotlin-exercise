@@ -3,8 +3,6 @@ package lotto.presentation
 import lotto.application.LottoService
 import lotto.application.dto.PurchaseLottoCommand
 import lotto.domain.vo.LottoGenerationStrategy
-import lotto.domain.vo.LottoNumber
-import lotto.domain.vo.LottoNumbers
 import lotto.domain.vo.TicketPrice
 import lotto.domain.vo.WinningNumbers
 import lotto.domain.vo.enums.RoundStatus
@@ -97,20 +95,7 @@ class LottoController(
         }
     }
 
-    private fun generateWinningNumbers(): WinningNumbers {
-        val winningLottoNumbers = LottoNumbers.auto(strategy)
-        val usedNumbers = winningLottoNumbers.numbers.map { it.number }.toSet()
-
-        var generatedBonus: LottoNumber
-        while (true) {
-            val rand = LottoNumber.random()
-            if (rand.number !in usedNumbers) {
-                generatedBonus = rand
-                break
-            }
-        }
-        return WinningNumbers(winningLottoNumbers, generatedBonus)
-    }
+    private fun generateWinningNumbers(): WinningNumbers = WinningNumbers.draw(strategy)
 
     private fun processDrawResult(winningNumbers: WinningNumbers) {
         val result = service.drawLotto(currentRoundNumber, winningNumbers)
