@@ -1,6 +1,7 @@
 package lotto.domain.vo
 
-data class LottoNumber(
+@JvmInline
+value class LottoNumber(
     val number: Int,
 ) {
     init {
@@ -8,8 +9,6 @@ data class LottoNumber(
             "$MIN_NUMBER ~ $MAX_NUMBER 사이의 로또 번호만 입력 가능합니다"
         }
     }
-
-    override fun toString(): String = number.toString()
 
     companion object {
         const val MIN_NUMBER = 1
