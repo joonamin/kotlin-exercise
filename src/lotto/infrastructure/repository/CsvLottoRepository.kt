@@ -57,7 +57,7 @@ class CsvLottoRepository(
         // 1행 파싱: roundNumber,status,winningNumbers,bonusNumber
         val headerParts = lines[0].split(",")
         val roundNumber = headerParts[0].toInt()
-        val status = RoundStatus.valueOf(headerParts[1])
+        val status = RoundStatus.fromStatus(headerParts[1])
 
         // 3행~ 티켓 데이터 파싱
         val dataLines = lines.drop(2)
