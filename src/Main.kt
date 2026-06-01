@@ -2,6 +2,7 @@ import lotto.application.LottoService
 import lotto.infrastructure.repository.CsvLottoRepository
 import lotto.infrastructure.strategy.RandomLottoGenerationStrategy
 import lotto.presentation.LottoController
+import payment.domain.entity.Wallet
 import payment.infrastructure.repository.FileWalletRepository
 
 fun main() {
@@ -12,7 +13,7 @@ fun main() {
     val strategy = RandomLottoGenerationStrategy()
     val service = LottoService(lottoRepository, strategy)
 
-    val wallet = walletRepository.load() ?: payment.domain.entity.Wallet()
+    val wallet = walletRepository.load() ?: Wallet()
 
     val controller = LottoController(service, walletRepository, strategy, wallet)
     controller.run()
