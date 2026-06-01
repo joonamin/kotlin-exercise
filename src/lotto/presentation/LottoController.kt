@@ -31,14 +31,13 @@ class LottoController(
         }
     }
 
-    private fun executeMenu(menu: Int) {
+    private fun executeMenu(menu: MenuOption) {
         when (menu) {
-            1 -> purchase()
-            2 -> draw()
-            3 -> charge()
-            4 -> queryHistory()
-            5 -> exit()
-            else -> OutputView.printError("잘못된 메뉴 번호입니다.")
+            MenuOption.PURCHASE -> purchase()
+            MenuOption.DRAW -> draw()
+            MenuOption.CHARGE -> charge()
+            MenuOption.QUERY_HISTORY -> queryHistory()
+            MenuOption.EXIT -> exit()
         }
     }
 
