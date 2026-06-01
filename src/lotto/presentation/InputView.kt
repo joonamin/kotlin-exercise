@@ -35,8 +35,8 @@ object InputView {
             print("메뉴를 선택하세요: ")
             readln().trim().toInt()
         }
-        
-        fun readRoundNumber(): Int =
+
+    fun readRoundNumber(): Int =
         retryOnException {
             println("조회할 회차 번호를 입력해 주세요.")
             readln().trim().toInt()

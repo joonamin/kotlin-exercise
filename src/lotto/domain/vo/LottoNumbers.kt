@@ -11,7 +11,7 @@ data class LottoNumbers(
         require(numbers.size == TOTAL_COUNT) { "로또 번호들은 중복 없이 ${TOTAL_COUNT} 개여야 합니다" }
     }
 
-    fun toCsvString(): String = this.numbers.joinToString(":")
+    fun toCsvString(): String = this.numbers.joinToString(":") { it.number.toString() }
 
     fun contains(lottoNumber: LottoNumber): Boolean = this.numbers.contains(lottoNumber)
 
