@@ -28,12 +28,8 @@ enum class Rank(
         // values()는 항상 새로운 배열을 생성하여 복사하여 제공
         // entries는 내부적으로 캐싱된 리스트를 반환
         fun valueOf(
-            count: Int,
+            matchCount: Int,
             bonusMatch: Boolean,
-        ): Rank =
-            entries.find {
-                it.matchCount == count && it.requiresBonus == (count == 5 && bonusMatch)
-            }
-                ?: MISS
+        ): Rank = entries.find { it.matchCount == matchCount && (!it.requiresBonus || bonusMatch) } ?: MISS
     }
 }
