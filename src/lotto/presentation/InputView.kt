@@ -24,16 +24,15 @@ object InputView {
     fun readMenuOption(
         currentRound: Int,
         walletBalance: Money,
-    ): Int =
+    ): MenuOption =
         retryOnException {
             println("\n=== 로또 시스템 (잔액: ${"%,d".format(walletBalance.value)}원, 현재 진행중: ${currentRound}회차) ===")
-            println("1. 로또 구매")
-            println("2. 로또 추첨 (당첨 번호 발표)")
-            println("3. 잔액 충전")
-            println("4. 과거 회차 데이터 조회")
-            println("5. 종료")
+            MenuOption.entries.forEach {
+                println("${it.id}. ${it.description}")
+            }
             print("메뉴를 선택하세요: ")
-            readln().trim().toInt()
+            val input = readln().trim().toInt()
+            MenuOption.from(input) ?: throw IllegalArgumentException("잘못된 메뉴 번호입니다.")
         }
 
     fun readRoundNumber(): Int =
