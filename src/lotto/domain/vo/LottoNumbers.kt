@@ -1,12 +1,14 @@
 package lotto.domain.vo
 
+import java.util.SortedSet
+
 data class LottoNumbers(
     private val _numbers: List<LottoNumber>,
 ) {
-    val numbers: List<LottoNumber> = _numbers.sortedBy { it.number }
+    val numbers: SortedSet<LottoNumber> = _numbers.toSortedSet()
 
     init {
-        require(numbers.distinct().size == TOTAL_COUNT) { "로또 번호들은 중복 없이 ${TOTAL_COUNT} 개여야 합니다" }
+        require(numbers.size == TOTAL_COUNT) { "로또 번호들은 중복 없이 ${TOTAL_COUNT} 개여야 합니다" }
     }
 
     fun toCsvString(): String = this.numbers.joinToString(":")

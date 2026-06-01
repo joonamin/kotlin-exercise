@@ -24,7 +24,7 @@ data class WinningNumbers(
     companion object {
         fun draw(strategy: LottoGenerationStrategy): WinningNumbers {
             val lottoNumbers = LottoNumbers.auto(strategy)
-            val bonus = strategy.generate(count = 1, exclude = lottoNumbers.numbers).first()
+            val bonus = strategy.generate(count = 1, exclude = lottoNumbers.numbers.toList()).first()
             return WinningNumbers(lottoNumbers, bonus)
         }
     }
