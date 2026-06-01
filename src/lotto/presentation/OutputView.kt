@@ -22,9 +22,7 @@ object OutputView {
         tickets.forEach { ticket ->
             val formatted =
                 ticket.numbers
-                    .map { it.number }
-                    .sorted()
-                    .joinToString(", ", "[", "]")
+                    .joinToString(", ", "[", "]") { it.number.toString() }
             println(formatted)
         }
         println()
