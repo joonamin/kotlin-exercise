@@ -83,9 +83,7 @@ class LottoController(
             winningNumbers
                 .lottoNumbers
                 .numbers
-                .map { it.number }
-                .sorted()
-                .joinToString(", ", "[", "]")
+                .joinToString(", ", "[", "]") { it.number.toString() }
         println("당첨 번호: $numbersString + 보너스: ${winningNumbers.bonusNumber.number}")
 
         try {
