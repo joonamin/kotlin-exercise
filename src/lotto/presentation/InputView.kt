@@ -33,32 +33,32 @@ object InputView {
             println("4. 과거 회차 데이터 조회")
             println("5. 종료")
             print("메뉴를 선택하세요: ")
-            readLine()!!.trim().toInt()
+            readln().trim().toInt()
         }
-
-    fun readRoundNumber(): Int =
+        
+        fun readRoundNumber(): Int =
         retryOnException {
             println("조회할 회차 번호를 입력해 주세요.")
-            readLine()!!.trim().toInt()
+            readln().trim().toInt()
         }
 
     fun readChargeAmount(): Money =
         retryOnException {
             println("충전할 금액을 입력해 주세요.")
-            val amount = readLine()!!.trim().toInt()
+            val amount = readln().trim().toInt()
             Money.won(amount)
         }
 
     fun readTicketCount(): Int =
         retryOnException {
             println("구매할 로또 개수를 입력해 주세요.")
-            readLine()!!.trim().toInt()
+            readln().trim().toInt()
         }
 
     fun readManualTicketCount(totalCount: Int): Int =
         retryOnException {
             println("수동으로 구매할 로또 수를 입력해 주세요.")
-            val count = readLine()!!.trim().toInt()
+            val count = readln().trim().toInt()
             require(count in 0..totalCount) { "수동 구매 개수는 0 이상 총 구매 개수($totalCount) 이하여야 합니다." }
             count
         }
