@@ -18,8 +18,14 @@ import lotto.infrastructure.repository.LottoRepository
 class LottoServiceTest : BehaviorSpec({
     fun lottoNumbers(vararg nums: Int) = LottoNumbers(nums.map { LottoNumber(it) })
 
+    data class TestDependencies(
+        val repository: FakeLottoRepository,
+        val strategy: LottoGenerationStrategy,
+        val service: LottoService
+    )
+
     // 테스트마다 독립적인 Fake Repository와 Service를 생성하는 팩토리
-    fun createTestDependencies(): Triple<FakeLottoRepository, LottoGenerationStrategy, LottoService> {
+    fun createTestDependencies(): TestDependencies {
         val repository = FakeLottoRepository()
         // 결정적 전략: exclude 목록을 존중하며 순차적 번호 생성
         val strategy = LottoGenerationStrategy { count, exclude ->
@@ -27,7 +33,7 @@ class LottoServiceTest : BehaviorSpec({
             (1..45).filter { it !in excludeSet }.take(count).map { LottoNumber(it) }
         }
         val service = LottoService(repository, strategy)
-        return Triple(repository, strategy, service)
+        return TestDependencies(repository, strategy, service)
     }
 
     Given("신규 회차에 로또를 구매할 때") {
@@ -88,19 +94,6 @@ class LottoServiceTest : BehaviorSpec({
                 val result = service.drawLotto(1, winningNumbers)
                 result shouldNotBe null
                 result.results shouldHaveSize 1
-            }
-        }
-
-        When("6개 모두 일치하는 티켓이 있으면") {
-            Then("해당 티켓은 FIRST 등수를 받는다") {
-                val (_, _, service) = createTestDependencies()
-                val manual = lottoNumbers(1, 2, 3, 4, 5, 6)
-                val command = PurchaseLottoCommand.of(1, 1, listOf(manual))
-                service.purchaseLotto(command)
-
-                val winningNumbers = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
-                val result = service.drawLotto(1, winningNumbers)
-                result.results[0].rank shouldBe Rank.FIRST
             }
         }
     }

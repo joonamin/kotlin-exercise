@@ -5,152 +5,56 @@ import io.kotest.matchers.shouldBe
 import payment.domain.vo.Money
 
 class RankTest : BehaviorSpec({
-    Given("6개 일치할 때") {
-        When("valueOf(6, false)를 호출하면") {
-            Then("1등(FIRST)을 반환한다") {
-                Rank.valueOf(6, false) shouldBe Rank.FIRST
-            }
-        }
+    Given("각 등수의 조건을 확인할 때") {
+        data class ConditionTestCase(
+            val matchCount: Int,
+            val matchBonus: Boolean,
+            val expectedRank: Rank
+        )
 
-        When("valueOf(6, true)를 호출해도") {
-            Then("1등(FIRST)을 반환한다") {
-                Rank.valueOf(6, true) shouldBe Rank.FIRST
-            }
-        }
-    }
-
-    Given("5개 일치할 때") {
-        When("보너스가 일치하면") {
-            Then("2등(SECOND)을 반환한다") {
-                Rank.valueOf(5, true) shouldBe Rank.SECOND
-            }
-        }
-
-        When("보너스가 불일치하면") {
-            Then("3등(THIRD)을 반환한다") {
-                Rank.valueOf(5, false) shouldBe Rank.THIRD
-            }
-        }
-    }
-
-    Given("4개 일치할 때") {
-        When("valueOf(4, false)를 호출하면") {
-            Then("4등(FOURTH)을 반환한다") {
-                Rank.valueOf(4, false) shouldBe Rank.FOURTH
-            }
-        }
-
-        When("valueOf(4, true)를 호출해도") {
-            Then("4등(FOURTH)을 반환한다") {
-                Rank.valueOf(4, true) shouldBe Rank.FOURTH
+        listOf(
+            ConditionTestCase(6, false, Rank.FIRST),
+            ConditionTestCase(6, true, Rank.FIRST),
+            ConditionTestCase(5, true, Rank.SECOND),
+            ConditionTestCase(5, false, Rank.THIRD),
+            ConditionTestCase(4, false, Rank.FOURTH),
+            ConditionTestCase(4, true, Rank.FOURTH),
+            ConditionTestCase(3, false, Rank.FIFTH),
+            ConditionTestCase(3, true, Rank.FIFTH),
+            ConditionTestCase(2, false, Rank.MISS),
+            ConditionTestCase(1, false, Rank.MISS),
+            ConditionTestCase(0, false, Rank.MISS)
+        ).forEach { testCase ->
+            When("${testCase.matchCount}개 일치, 보너스 일치 여부가 ${testCase.matchBonus}일 때") {
+                Then("${testCase.expectedRank}을 반환한다") {
+                    Rank.valueOf(testCase.matchCount, testCase.matchBonus) shouldBe testCase.expectedRank
+                }
             }
         }
     }
 
-    Given("3개 일치할 때") {
-        When("valueOf(3, false)를 호출하면") {
-            Then("5등(FIFTH)을 반환한다") {
-                Rank.valueOf(3, false) shouldBe Rank.FIFTH
-            }
-        }
+    Given("각 등수의 속성을 확인할 때") {
+        data class PropertyTestCase(
+            val rank: Rank,
+            val expectedPrize: Money,
+            val expectedMatchCount: Int,
+            val expectedRequiresBonus: Boolean
+        )
 
-        When("valueOf(3, true)를 호출해도") {
-            Then("5등(FIFTH)을 반환한다") {
-                Rank.valueOf(3, true) shouldBe Rank.FIFTH
-            }
-        }
-    }
-
-    Given("2개 이하 일치할 때") {
-        When("valueOf(2, false)를 호출하면") {
-            Then("꽝(MISS)을 반환한다") {
-                Rank.valueOf(2, false) shouldBe Rank.MISS
-            }
-        }
-
-        When("valueOf(1, false)를 호출하면") {
-            Then("꽝(MISS)을 반환한다") {
-                Rank.valueOf(1, false) shouldBe Rank.MISS
-            }
-        }
-
-        When("valueOf(0, false)를 호출하면") {
-            Then("꽝(MISS)을 반환한다") {
-                Rank.valueOf(0, false) shouldBe Rank.MISS
-            }
-        }
-    }
-
-    Given("각 등수의 상금을 확인할 때") {
-        When("모든 Rank의 prize를 검증하면") {
-            Then("FIRST 상금은 21억원이다") {
-                Rank.FIRST.prize shouldBe Money.won(2_100_000_000)
-            }
-
-            Then("SECOND 상금은 6천만원이다") {
-                Rank.SECOND.prize shouldBe Money.won(60_000_000)
-            }
-
-            Then("THIRD 상금은 150만원이다") {
-                Rank.THIRD.prize shouldBe Money.won(1_500_000)
-            }
-
-            Then("FOURTH 상금은 5만원이다") {
-                Rank.FOURTH.prize shouldBe Money.won(50_000)
-            }
-
-            Then("FIFTH 상금은 5천원이다") {
-                Rank.FIFTH.prize shouldBe Money.won(5_000)
-            }
-
-            Then("MISS 상금은 0원이다") {
-                Rank.MISS.prize shouldBe Money.won(0)
-            }
-        }
-    }
-
-    Given("각 등수의 matchCount를 확인할 때") {
-        When("matchCount를 검증하면") {
-            Then("FIRST는 6이다") {
-                Rank.FIRST.matchCount shouldBe 6
-            }
-
-            Then("SECOND는 5이다") {
-                Rank.SECOND.matchCount shouldBe 5
-            }
-
-            Then("THIRD는 5이다") {
-                Rank.THIRD.matchCount shouldBe 5
-            }
-
-            Then("FOURTH는 4이다") {
-                Rank.FOURTH.matchCount shouldBe 4
-            }
-
-            Then("FIFTH는 3이다") {
-                Rank.FIFTH.matchCount shouldBe 3
-            }
-
-            Then("MISS는 0이다") {
-                Rank.MISS.matchCount shouldBe 0
-            }
-        }
-    }
-
-    Given("requiresBonus 속성을 확인할 때") {
-        When("SECOND의 requiresBonus를 확인하면") {
-            Then("true이다") {
-                Rank.SECOND.requiresBonus shouldBe true
-            }
-        }
-
-        When("나머지 등수의 requiresBonus를 확인하면") {
-            Then("모두 false이다") {
-                Rank.FIRST.requiresBonus shouldBe false
-                Rank.THIRD.requiresBonus shouldBe false
-                Rank.FOURTH.requiresBonus shouldBe false
-                Rank.FIFTH.requiresBonus shouldBe false
-                Rank.MISS.requiresBonus shouldBe false
+        listOf(
+            PropertyTestCase(Rank.FIRST, Money.won(2_100_000_000), 6, false),
+            PropertyTestCase(Rank.SECOND, Money.won(60_000_000), 5, true),
+            PropertyTestCase(Rank.THIRD, Money.won(1_500_000), 5, false),
+            PropertyTestCase(Rank.FOURTH, Money.won(50_000), 4, false),
+            PropertyTestCase(Rank.FIFTH, Money.won(5_000), 3, false),
+            PropertyTestCase(Rank.MISS, Money.won(0), 0, false)
+        ).forEach { testCase ->
+            When("${testCase.rank}의 속성을 검증하면") {
+                Then("상금은 ${testCase.expectedPrize}, matchCount는 ${testCase.expectedMatchCount}, requiresBonus는 ${testCase.expectedRequiresBonus}이다") {
+                    testCase.rank.prize shouldBe testCase.expectedPrize
+                    testCase.rank.matchCount shouldBe testCase.expectedMatchCount
+                    testCase.rank.requiresBonus shouldBe testCase.expectedRequiresBonus
+                }
             }
         }
     }
