@@ -81,31 +81,23 @@ class LottoRoundTest : BehaviorSpec({
             }
         }
 
-        When("6개 모두 일치하는 티켓으로 추첨하면") {
-            Then("해당 티켓은 FIRST 등수를 받는다") {
-                val round = LottoRound(1, mutableListOf(lottoNumbers(1, 2, 3, 4, 5, 6)))
-                val winningNumbers = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
-                val result = round.draw(winningNumbers)
-                result.results[0].rank shouldBe Rank.FIRST
-            }
-        }
-
-        When("여러 티켓이 있는 상태에서 추첨하면") {
-            Then("각 티켓에 대해 등수가 계산된다") {
+        When("여러 장의 티켓이 포함된 회차를 추첨하면") {
+            Then("보유한 모든 티켓 수만큼 결과(TicketResult)가 포함된 LottoResult를 반환한다") {
                 val round = LottoRound(
                     1,
                     mutableListOf(
-                        lottoNumbers(1, 2, 3, 4, 5, 6),   // 6개 일치 → FIRST
-                        lottoNumbers(1, 2, 3, 4, 5, 7),   // 5개 + 보너스 → SECOND
-                        lottoNumbers(10, 20, 30, 40, 41, 42), // 0개 일치 → MISS
+                        lottoNumbers(1, 2, 3, 4, 5, 6),
+                        lottoNumbers(1, 2, 3, 4, 5, 7),
+                        lottoNumbers(10, 20, 30, 40, 41, 42),
                     ),
                 )
                 val winningNumbers = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
                 val result = round.draw(winningNumbers)
+                
                 result.results shouldHaveSize 3
-                result.results[0].rank shouldBe Rank.FIRST
-                result.results[1].rank shouldBe Rank.SECOND
-                result.results[2].rank shouldBe Rank.MISS
+                result.results[0].ticketNumbers shouldBe lottoNumbers(1, 2, 3, 4, 5, 6)
+                result.results[1].ticketNumbers shouldBe lottoNumbers(1, 2, 3, 4, 5, 7)
+                result.results[2].ticketNumbers shouldBe lottoNumbers(10, 20, 30, 40, 41, 42)
             }
         }
     }

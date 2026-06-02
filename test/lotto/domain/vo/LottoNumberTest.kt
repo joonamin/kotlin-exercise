@@ -7,16 +7,16 @@ import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 
 class LottoNumberTest : BehaviorSpec({
-    Given("유효한 범위(1~45) 내의 숫자가 주어졌을 때") {
+    Given("유효한 범위(${LottoNumber.MIN_NUMBER}~${LottoNumber.MAX_NUMBER}) 내의 숫자가 주어졌을 때") {
         When("LottoNumber를 생성하면") {
-            Then("최솟값 1로 정상 생성된다") {
-                val lottoNumber = LottoNumber(1)
-                lottoNumber.number shouldBe 1
+            Then("최솟값 ${LottoNumber.MIN_NUMBER}로 정상 생성된다") {
+                val lottoNumber = LottoNumber(LottoNumber.MIN_NUMBER)
+                lottoNumber.number shouldBe LottoNumber.MIN_NUMBER
             }
 
-            Then("최댓값 45로 정상 생성된다") {
-                val lottoNumber = LottoNumber(45)
-                lottoNumber.number shouldBe 45
+            Then("최댓값 ${LottoNumber.MAX_NUMBER}로 정상 생성된다") {
+                val lottoNumber = LottoNumber(LottoNumber.MAX_NUMBER)
+                lottoNumber.number shouldBe LottoNumber.MAX_NUMBER
             }
 
             Then("중간값으로 정상 생성된다") {
@@ -27,10 +27,10 @@ class LottoNumberTest : BehaviorSpec({
     }
 
     Given("유효 범위를 벗어난 숫자가 주어졌을 때") {
-        When("0으로 LottoNumber를 생성하면") {
+        When("${LottoNumber.MIN_NUMBER - 1}으로 LottoNumber를 생성하면") {
             Then("IllegalArgumentException이 발생한다") {
                 shouldThrow<IllegalArgumentException> {
-                    LottoNumber(0)
+                    LottoNumber(LottoNumber.MIN_NUMBER - 1)
                 }
             }
         }
@@ -43,10 +43,10 @@ class LottoNumberTest : BehaviorSpec({
             }
         }
 
-        When("46으로 LottoNumber를 생성하면") {
+        When("${LottoNumber.MAX_NUMBER + 1}으로 LottoNumber를 생성하면") {
             Then("IllegalArgumentException이 발생한다") {
                 shouldThrow<IllegalArgumentException> {
-                    LottoNumber(46)
+                    LottoNumber(LottoNumber.MAX_NUMBER + 1)
                 }
             }
         }
@@ -55,14 +55,14 @@ class LottoNumberTest : BehaviorSpec({
     Given("두 개의 LottoNumber가 주어졌을 때") {
         When("compareTo로 비교하면") {
             Then("작은 번호가 큰 번호보다 앞선다") {
-                val small = LottoNumber(1)
-                val large = LottoNumber(45)
+                val small = LottoNumber(LottoNumber.MIN_NUMBER)
+                val large = LottoNumber(LottoNumber.MAX_NUMBER)
                 small shouldBeLessThan large
             }
 
             Then("큰 번호가 작은 번호보다 뒤에 온다") {
-                val small = LottoNumber(1)
-                val large = LottoNumber(45)
+                val small = LottoNumber(LottoNumber.MIN_NUMBER)
+                val large = LottoNumber(LottoNumber.MAX_NUMBER)
                 large shouldBeGreaterThan small
             }
 
