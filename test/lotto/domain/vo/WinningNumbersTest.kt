@@ -31,77 +31,29 @@ class WinningNumbersTest : BehaviorSpec({
         }
     }
 
-    Given("6개 모두 일치하는 사용자 번호가 주어졌을 때") {
-        When("match를 호출하면") {
-            Then("1등(FIRST)을 반환한다") {
-                val winning = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
-                val userNumbers = lottoNumbers(1, 2, 3, 4, 5, 6)
-                winning.match(userNumbers) shouldBe Rank.FIRST
-            }
-        }
-    }
+    Given("당첨 번호(1~6)와 보너스 번호(7)가 주어지고, 다양한 사용자 번호로 match를 호출할 때") {
+        data class MatchTestCase(
+            val description: String,
+            val userNumbers: LottoNumbers,
+            val expectedRank: Rank
+        )
 
-    Given("5개 일치하고 보너스 번호도 일치하는 사용자 번호가 주어졌을 때") {
-        When("match를 호출하면") {
-            Then("2등(SECOND)을 반환한다") {
-                val winning = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
-                val userNumbers = lottoNumbers(1, 2, 3, 4, 5, 7)
-                winning.match(userNumbers) shouldBe Rank.SECOND
-            }
-        }
-    }
-
-    Given("5개 일치하고 보너스 번호는 불일치하는 사용자 번호가 주어졌을 때") {
-        When("match를 호출하면") {
-            Then("3등(THIRD)을 반환한다") {
-                val winning = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
-                val userNumbers = lottoNumbers(1, 2, 3, 4, 5, 8)
-                winning.match(userNumbers) shouldBe Rank.THIRD
-            }
-        }
-    }
-
-    Given("4개 일치하는 사용자 번호가 주어졌을 때") {
-        When("match를 호출하면") {
-            Then("4등(FOURTH)을 반환한다") {
-                val winning = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
-                val userNumbers = lottoNumbers(1, 2, 3, 4, 8, 9)
-                winning.match(userNumbers) shouldBe Rank.FOURTH
-            }
-        }
-    }
-
-    Given("3개 일치하는 사용자 번호가 주어졌을 때") {
-        When("match를 호출하면") {
-            Then("5등(FIFTH)을 반환한다") {
-                val winning = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
-                val userNumbers = lottoNumbers(1, 2, 3, 8, 9, 10)
-                winning.match(userNumbers) shouldBe Rank.FIFTH
-            }
-        }
-    }
-
-    Given("2개 이하 일치하는 사용자 번호가 주어졌을 때") {
         val winning = WinningNumbers(lottoNumbers(1, 2, 3, 4, 5, 6), LottoNumber(7))
 
-        When("2개 일치하면") {
-            Then("꽝(MISS)을 반환한다") {
-                val userNumbers = lottoNumbers(1, 2, 8, 9, 10, 11)
-                winning.match(userNumbers) shouldBe Rank.MISS
-            }
-        }
-
-        When("1개 일치하면") {
-            Then("꽝(MISS)을 반환한다") {
-                val userNumbers = lottoNumbers(1, 8, 9, 10, 11, 12)
-                winning.match(userNumbers) shouldBe Rank.MISS
-            }
-        }
-
-        When("0개 일치하면") {
-            Then("꽝(MISS)을 반환한다") {
-                val userNumbers = lottoNumbers(7, 8, 9, 10, 11, 12)
-                winning.match(userNumbers) shouldBe Rank.MISS
+        listOf(
+            MatchTestCase("6개 모두 일치하면", lottoNumbers(1, 2, 3, 4, 5, 6), Rank.FIRST),
+            MatchTestCase("5개 일치하고 보너스 번호도 일치하면", lottoNumbers(1, 2, 3, 4, 5, 7), Rank.SECOND),
+            MatchTestCase("5개 일치하고 보너스 번호는 불일치하면", lottoNumbers(1, 2, 3, 4, 5, 8), Rank.THIRD),
+            MatchTestCase("4개 일치하면", lottoNumbers(1, 2, 3, 4, 8, 9), Rank.FOURTH),
+            MatchTestCase("3개 일치하면", lottoNumbers(1, 2, 3, 8, 9, 10), Rank.FIFTH),
+            MatchTestCase("2개 일치하면", lottoNumbers(1, 2, 8, 9, 10, 11), Rank.MISS),
+            MatchTestCase("1개 일치하면", lottoNumbers(1, 8, 9, 10, 11, 12), Rank.MISS),
+            MatchTestCase("0개 일치하면", lottoNumbers(7, 8, 9, 10, 11, 12), Rank.MISS)
+        ).forEach { testCase ->
+            When(testCase.description) {
+                Then("${testCase.expectedRank}을(를) 반환한다") {
+                    winning.match(testCase.userNumbers) shouldBe testCase.expectedRank
+                }
             }
         }
     }
