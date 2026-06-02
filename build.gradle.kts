@@ -12,6 +12,16 @@ application {
     mainClass.set("MainKt")
 }
 
+kover {
+    reports {
+        filters {
+            excludes {
+                classes("lotto.presentation.**")
+            }
+        }
+    }
+}
+
 sourceSets {
     main {
         kotlin.srcDir("src")
