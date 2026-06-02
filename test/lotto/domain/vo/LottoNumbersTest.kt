@@ -38,20 +38,17 @@ class LottoNumbersTest : BehaviorSpec({
     }
 
     Given("6개가 아닌 번호 리스트가 주어졌을 때") {
-        When("5개로 생성하면") {
-            Then("IllegalArgumentException이 발생한다") {
-                val fiveNumbers = listOf(1, 2, 3, 4, 5).map { LottoNumber(it) }
-                shouldThrow<IllegalArgumentException> {
-                    LottoNumbers(fiveNumbers)
-                }
-            }
-        }
+        data class InvalidSizeTestCase(val count: Int, val numbers: List<Int>)
 
-        When("7개로 생성하면") {
-            Then("IllegalArgumentException이 발생한다") {
-                val sevenNumbers = listOf(1, 2, 3, 4, 5, 6, 7).map { LottoNumber(it) }
-                shouldThrow<IllegalArgumentException> {
-                    LottoNumbers(sevenNumbers)
+        listOf(
+            InvalidSizeTestCase(5, listOf(1, 2, 3, 4, 5)),
+            InvalidSizeTestCase(7, listOf(1, 2, 3, 4, 5, 6, 7)),
+        ).forEach { testCase ->
+            When("${testCase.count}개로 생성하면") {
+                Then("IllegalArgumentException이 발생한다") {
+                    shouldThrow<IllegalArgumentException> {
+                        LottoNumbers(testCase.numbers.map { LottoNumber(it) })
+                    }
                 }
             }
         }
@@ -74,27 +71,24 @@ class LottoNumbersTest : BehaviorSpec({
     }
 
     Given("두 LottoNumbers가 주어졌을 때") {
-        When("3개의 번호가 일치하면") {
-            Then("countMatchedNumbers는 3을 반환한다") {
-                val numbers1 = LottoNumbers(listOf(1, 2, 3, 4, 5, 6).map { LottoNumber(it) })
-                val numbers2 = LottoNumbers(listOf(1, 2, 3, 10, 11, 12).map { LottoNumber(it) })
-                numbers1.countMatchedNumbers(numbers2) shouldBe 3
-            }
-        }
+        data class MatchCountTestCase(
+            val description: String,
+            val nums1: List<Int>,
+            val nums2: List<Int>,
+            val expectedCount: Int,
+        )
 
-        When("모든 번호가 일치하면") {
-            Then("countMatchedNumbers는 6을 반환한다") {
-                val numbers1 = LottoNumbers(listOf(1, 2, 3, 4, 5, 6).map { LottoNumber(it) })
-                val numbers2 = LottoNumbers(listOf(1, 2, 3, 4, 5, 6).map { LottoNumber(it) })
-                numbers1.countMatchedNumbers(numbers2) shouldBe 6
-            }
-        }
-
-        When("일치하는 번호가 없으면") {
-            Then("countMatchedNumbers는 0을 반환한다") {
-                val numbers1 = LottoNumbers(listOf(1, 2, 3, 4, 5, 6).map { LottoNumber(it) })
-                val numbers2 = LottoNumbers(listOf(7, 8, 9, 10, 11, 12).map { LottoNumber(it) })
-                numbers1.countMatchedNumbers(numbers2) shouldBe 0
+        listOf(
+            MatchCountTestCase("3개의 번호가 일치하면", listOf(1, 2, 3, 4, 5, 6), listOf(1, 2, 3, 10, 11, 12), 3),
+            MatchCountTestCase("모든 번호가 일치하면", listOf(1, 2, 3, 4, 5, 6), listOf(1, 2, 3, 4, 5, 6), 6),
+            MatchCountTestCase("일치하는 번호가 없으면", listOf(1, 2, 3, 4, 5, 6), listOf(7, 8, 9, 10, 11, 12), 0),
+        ).forEach { testCase ->
+            When(testCase.description) {
+                Then("countMatchedNumbers는 ${testCase.expectedCount}을 반환한다") {
+                    val numbers1 = LottoNumbers(testCase.nums1.map { LottoNumber(it) })
+                    val numbers2 = LottoNumbers(testCase.nums2.map { LottoNumber(it) })
+                    numbers1.countMatchedNumbers(numbers2) shouldBe testCase.expectedCount
+                }
             }
         }
     }

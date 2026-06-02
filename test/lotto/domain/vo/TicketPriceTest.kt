@@ -53,27 +53,18 @@ class TicketPriceTest : BehaviorSpec({
     Given("예산에 따른 최대 구매 가능 수량을 계산할 때") {
         val ticketPrice = TicketPrice.DEFAULT
 
-        When("5000원의 예산이 있으면") {
-            Then("최대 5장 구매 가능하다") {
-                ticketPrice.maxAffordableCount(Money.won(5000)) shouldBe 5
-            }
-        }
+        data class AffordableTestCase(val budget: Money, val expectedCount: Int)
 
-        When("500원의 예산이 있으면") {
-            Then("0장 구매 가능하다") {
-                ticketPrice.maxAffordableCount(Money.won(500)) shouldBe 0
-            }
-        }
-
-        When("정확히 1000원이면") {
-            Then("1장 구매 가능하다") {
-                ticketPrice.maxAffordableCount(Money.won(1000)) shouldBe 1
-            }
-        }
-
-        When("0원이면") {
-            Then("0장 구매 가능하다") {
-                ticketPrice.maxAffordableCount(Money.ZERO) shouldBe 0
+        listOf(
+            AffordableTestCase(Money.won(5000), 5),
+            AffordableTestCase(Money.won(500), 0),
+            AffordableTestCase(Money.won(1000), 1),
+            AffordableTestCase(Money.ZERO, 0),
+        ).forEach { testCase ->
+            When("${testCase.budget}의 예산이 있으면") {
+                Then("${testCase.expectedCount}장 구매 가능하다") {
+                    ticketPrice.maxAffordableCount(testCase.budget) shouldBe testCase.expectedCount
+                }
             }
         }
     }

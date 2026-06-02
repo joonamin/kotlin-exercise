@@ -8,45 +8,35 @@ import io.kotest.matchers.shouldBe
 
 class LottoNumberTest : BehaviorSpec({
     Given("유효한 범위(${LottoNumber.MIN_NUMBER}~${LottoNumber.MAX_NUMBER}) 내의 숫자가 주어졌을 때") {
-        When("LottoNumber를 생성하면") {
-            Then("최솟값 ${LottoNumber.MIN_NUMBER}로 정상 생성된다") {
-                val lottoNumber = LottoNumber(LottoNumber.MIN_NUMBER)
-                lottoNumber.number shouldBe LottoNumber.MIN_NUMBER
-            }
+        data class ValidNumberTestCase(val description: String, val value: Int)
 
-            Then("최댓값 ${LottoNumber.MAX_NUMBER}로 정상 생성된다") {
-                val lottoNumber = LottoNumber(LottoNumber.MAX_NUMBER)
-                lottoNumber.number shouldBe LottoNumber.MAX_NUMBER
-            }
-
-            Then("중간값으로 정상 생성된다") {
-                val lottoNumber = LottoNumber(23)
-                lottoNumber.number shouldBe 23
+        listOf(
+            ValidNumberTestCase("최솟값 (${LottoNumber.MIN_NUMBER})", LottoNumber.MIN_NUMBER),
+            ValidNumberTestCase("최댓값 (${LottoNumber.MAX_NUMBER})", LottoNumber.MAX_NUMBER),
+            ValidNumberTestCase("중간값 (23)", 23),
+        ).forEach { testCase ->
+            When("${testCase.description}로 LottoNumber를 생성하면") {
+                Then("정상 생성된다") {
+                    val lottoNumber = LottoNumber(testCase.value)
+                    lottoNumber.number shouldBe testCase.value
+                }
             }
         }
     }
 
     Given("유효 범위를 벗어난 숫자가 주어졌을 때") {
-        When("${LottoNumber.MIN_NUMBER - 1}으로 LottoNumber를 생성하면") {
-            Then("IllegalArgumentException이 발생한다") {
-                shouldThrow<IllegalArgumentException> {
-                    LottoNumber(LottoNumber.MIN_NUMBER - 1)
-                }
-            }
-        }
+        data class InvalidNumberTestCase(val description: String, val value: Int)
 
-        When("음수로 LottoNumber를 생성하면") {
-            Then("IllegalArgumentException이 발생한다") {
-                shouldThrow<IllegalArgumentException> {
-                    LottoNumber(-1)
-                }
-            }
-        }
-
-        When("${LottoNumber.MAX_NUMBER + 1}으로 LottoNumber를 생성하면") {
-            Then("IllegalArgumentException이 발생한다") {
-                shouldThrow<IllegalArgumentException> {
-                    LottoNumber(LottoNumber.MAX_NUMBER + 1)
+        listOf(
+            InvalidNumberTestCase("최솟값 미만 (${LottoNumber.MIN_NUMBER - 1})", LottoNumber.MIN_NUMBER - 1),
+            InvalidNumberTestCase("음수 (-1)", -1),
+            InvalidNumberTestCase("최댓값 초과 (${LottoNumber.MAX_NUMBER + 1})", LottoNumber.MAX_NUMBER + 1),
+        ).forEach { testCase ->
+            When("${testCase.description}으로 LottoNumber를 생성하면") {
+                Then("IllegalArgumentException이 발생한다") {
+                    shouldThrow<IllegalArgumentException> {
+                        LottoNumber(testCase.value)
+                    }
                 }
             }
         }
